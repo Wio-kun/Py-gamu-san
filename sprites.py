@@ -43,6 +43,7 @@ class Boss(pg.sprite.Sprite):
         self.speed = 2
         self.direction_x = 0
         self.direction_y = 5
+        self.image = pg.transform.flip(self.image, True, False)
     
     def update(self):
         self.rect.center = self.pos
