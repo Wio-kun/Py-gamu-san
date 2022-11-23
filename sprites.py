@@ -16,6 +16,7 @@ class Player(pg.sprite.Sprite):
         self.pos = vec(500, 500)
         self.rect.center = self.pos
         self.speed = 3
+        self.hp = 1000
 
 
     def update(self):
