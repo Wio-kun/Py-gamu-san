@@ -17,6 +17,7 @@ class Player(pg.sprite.Sprite):
         self.rect.center = self.pos
         self.speed = 3
         self.hp = 1000
+        self.immune = False
 
 
     def update(self):
@@ -43,8 +44,9 @@ class Boss(pg.sprite.Sprite):
         self.rect.center = self.pos
         self.speed = 2
         self.direction_x = 0
-        self.direction_y = 5
+        self.direction_y = 2
         self.image = pg.transform.flip(self.image, True, False)
+        self.hp = 10000
     
     def update(self):
         self.rect.center = self.pos
@@ -52,29 +54,7 @@ class Boss(pg.sprite.Sprite):
         self.pos.x += self.direction_x
         self.pos.y += self.direction_y
 
-        if self.pos.x < 60:
-            self.direction_x = 0
-            self.direction_y = -5
-            self.pos.x = 60
-
-        if self.pos == vec(60, 1095):
-            self.image = pg.transform.flip(self.image, True, False)
-
-        if self.pos.y < 155:
-            self.direction_x = 5
-            self.direction_y = 0
-            self.pos.y = 155
-
-        if self.pos == vec(1156, 160):
-            self.image = pg.transform.flip(self.image, True, False)
-
-        if self.pos.x > 1156:
-            self.direction_x = 0
-            self.direction_y = 5
-            self.pos.x = 1156
-
-        if self.pos.y > 1100:
-            self.direction_x = -5
-            self.direction_y = 0
-            self.pos.y = 1100
-
+        if self.pos.x < self.game.karakter.pos.x:             self.direction_x = 2
+        if self.pos.x > self.game.karakter.pos.x:             self.direction_x = -2
+        if self.pos.y < self.game.karakter.pos.y:             self.direction_y = 2
+        if self.pos.y > self.game.karakter.pos.y:             self.direction_y = -2
