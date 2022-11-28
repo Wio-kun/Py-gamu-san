@@ -18,7 +18,7 @@ class Game():
         self.bg=pg.image.load("floor 1.png").convert_alpha()
         self.bg=pg.transform.scale(self.bg, (self.WIDTH, self.HEIGHT))
 
-        self.tekst_font = pg.font.SysFont("ebrima", 100)
+        self.tekst_font = pg.font.SysFont("gabriola", 100)
         self.FPS = 120
         self.clock = pg.time.Clock()
 
@@ -29,15 +29,14 @@ class Game():
         self.boss_group = pg.sprite.Group()
         self.knight_group = pg.sprite.Group()
 
-        self.knight = Player()
+        self.knight = Player(self)
         self.black_knight = Boss(self)
         self.all_sprites.add(self.knight, self.black_knight)
         self.boss_group.add(self.black_knight)
         self.knight_group.add(self.knight)
 
         self.i = 0
-
-        self.knight.hp = 1000
+        self.start_over = False
 
         self.last_collision = 0
 
@@ -72,12 +71,37 @@ class Game():
                     self.knight.immune = True
                     self.last_collision = self.now
                     self.tekst_hp = self.tekst_font.render("HP: " + str(self.knight.hp), False, self.WHITE)
-                    print(self.knight.hp)
                     if self.knight.hp <=0:
                         self.knight.kill()
+                        self.start_over = True
+                        playing = False
+                       
 
             self.all_sprites.draw(self.screen)
             pg.display.update()
+        
+        if self.start_over:
+            self.game_over_loop()
+
+    def game_over_loop(self):
+
+        self.game_over=True
+        while self.game_over:
+            self.clock.tick(self.FPS)
+            self.game_over_text=self.tekst_font.render("GAME                   OVER", False, (self.RED))
+            self.game_restart_text=self.tekst_font.render("Press \"Ctrl R\" to restart", False, (self.WHITE))
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    self.game_over = False
+
+                if event.type == pg.KEYDOWN: 
+                   if event.key == pg.K_r and pg.key.get_mods() & pg.KMOD_LCTRL:
+                        self.game_over = False
+
+            self.screen.blit(self.game_over_text, (self.WIDTH/2 - self.game_over_text.get_width()/2, 400))
+            self.screen.blit(self.game_restart_text, (self.WIDTH/2 - self.game_restart_text.get_width()/2, self.HEIGHT/2))
+            pg.display.update()
+
+        self.new()
 
 g = Game()
- 
