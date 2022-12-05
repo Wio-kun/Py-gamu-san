@@ -28,6 +28,7 @@ class Game():
         self.all_sprites = pg.sprite.Group()
         self.boss_group = pg.sprite.Group()
         self.knight_group = pg.sprite.Group()
+        self.sword_group = pg.sprite.Group()
 
         self.knight = Player(self)
         self.black_knight = Boss(self)
@@ -63,7 +64,7 @@ class Game():
 
             self.hits = pg.sprite.spritecollide(self.knight, self.boss_group, False)
             if self.hits:
-                if self.last_collision < self.now - 1500:
+                if self.last_collision < self.now - 1500: #millisekunder
                     self.knight.immune = False
                 
                 if not self.knight.immune:
@@ -75,11 +76,15 @@ class Game():
                         self.knight.kill()
                         self.start_over = True
                         playing = False
-                       
+
+            if self.strike:
+                a
+
+            self.strike = pg.sprite.spritecollide(self.black_knight, self.sword_group, False)
 
             self.all_sprites.draw(self.screen)
             pg.display.update()
-        
+
         if self.start_over:
             self.game_over_loop()
 
