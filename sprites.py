@@ -1,12 +1,16 @@
 import pygame as pg
+from random import randint
 vec = pg.math.Vector2
 
-player_img = pg.image.load("knight.png")
-player_img = pg.transform.scale(player_img, (76,148))
-boss1_image = pg.image.load("black_knight.png")
-boss1_image = pg.transform.scale(boss1_image, (120, 208))
+player_img = pg.image.load("knight_fight.png")
+player_img = pg.transform.scale(player_img, (144,144))
+boss_image = pg.image.load("king.png")
+boss_image = pg.transform.scale(boss_image, (135, 235))
+guard_image = pg.image.load("black_knight_fight")
+guard_image = pg.transform.scale(guard_image, (185, 225))
 player_img_180 = pg.transform.flip(player_img, True, False)
-boss1_image_180 = pg.transform.flip(boss1_image, True, False)
+boss_image_180 = pg.transform.flip(boss_image, True, False)
+guard_image_180 = pg.transform.flip(boss_image, True, False)
 
 class Player(pg.sprite.Sprite):
     def __init__(self, game):
@@ -45,10 +49,10 @@ class Player(pg.sprite.Sprite):
                 self.attack_left()
 
 
-        if self.pos.x <38:
-            self.pos.x = 38
-        if self.pos.x >1178:
-            self.pos.x = 1178
+        if self.pos.x <72:
+            self.pos.x = 72
+        if self.pos.x >1144:
+            self.pos.x = 1144
         if self.pos.y <150:
             self.pos.y = 150
         if self.pos.y >1140:
@@ -81,10 +85,10 @@ class Sword(pg.sprite.Sprite):
 
 class Boss(pg.sprite.Sprite):
     def __init__(self, game):
-        self.groups = game.all_sprites, game.boss_group
+        self.groups = game.all_sprites, game.enemy_group
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = boss1_image
+        self.image = boss_image
         self.rect = self.image.get_rect()
         self.pos = vec(608, 155)
         self.rect.center = self.pos
@@ -101,10 +105,41 @@ class Boss(pg.sprite.Sprite):
 
         if self.pos.x < self.game.knight.pos.x:
             self.direction_x = 2
-            self.image = boss1_image_180
+            self.image = boss_image_180
         if self.pos.x > self.game.knight.pos.x:
             self.direction_x = -2
-            self.image = boss1_image
+            self.image = boss_image
+        if self.pos.y < self.game.knight.pos.y:
+            self.direction_y = 2
+        if self.pos.y > self.game.knight.pos.y:
+            self.direction_y = -2
+
+class Guard(pg.sprite.Sprite):
+    def __init__(self, game):
+        self.groups = game.all_sprites, game.enemy_group
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = guard_image
+        self.rect = self.image.get_rect()
+        self.pos = vec(608, 155)
+        self.rect.center = self.pos
+        self.speed = 2
+        self.direction_x = 0
+        self.direction_y = 2
+        self.hp = 1000
+
+    def update(self):
+        self.rect.center = self.pos
+
+        self.pos.x += self.direction_x
+        self.pos.y += self.direction_y
+
+        if self.pos.x < self.game.knight.pos.x:
+            self.direction_x = 2
+            self.image = boss_image_180
+        if self.pos.x > self.game.knight.pos.x:
+            self.direction_x = -2
+            self.image = boss_image
         if self.pos.y < self.game.knight.pos.y:
             self.direction_y = 2
         if self.pos.y > self.game.knight.pos.y:
