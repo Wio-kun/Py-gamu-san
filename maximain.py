@@ -32,14 +32,13 @@ class Game():
 
         self.knight = Player(self)
         self.king = Boss(self)
-        self.all_sprites.add(self.knight, self.king)
-        self.enemy_group.add(self.king)
-        self.knight_group.add(self.knight)
+    
 
         self.i = 0
         self.start_over = False
 
         self.last_collision = 0
+        self.last_attack = 0
 
         self.tekst_hp = self.tekst_font.render("HP: " + str(self.knight.hp), False, self.WHITE)
 
@@ -77,8 +76,6 @@ class Game():
                         self.start_over = True
                         playing = False
 
-
-            self.strike = pg.sprite.spritecollide(self.king, self.sword_group, False)
 
 
             self.all_sprites.draw(self.screen)
