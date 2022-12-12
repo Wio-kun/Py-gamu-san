@@ -26,6 +26,7 @@ class Player(pg.sprite.Sprite):
         self.hp = 1000
         self.immune = False
         self.attack_cooldown = False
+        self.last_attack = 0
 
 
     def update(self):
@@ -60,9 +61,9 @@ class Player(pg.sprite.Sprite):
 
 
     def attack_left(self):
-        Sword(self.game, self.pos.x + 100, self.pos.y)
+        Sword(self.game, self.pos.x + 150, self.pos.y)
     def attack_right(self):
-        Sword(self.game, self.pos.x - 100, self.pos.y)
+        Sword(self.game, self.pos.x - 150, self.pos.y)
 
 
 class Sword(pg.sprite.Sprite):
@@ -76,22 +77,27 @@ class Sword(pg.sprite.Sprite):
         self.pos = vec(x, y)
         self.rect = self.image.get_rect()
         self.swing_timer = pg.time.get_ticks()
+        self.spawn_tick = pg.time.get_ticks()
         self.rect.center = self.pos
         self.passive = False
+        self.last_attack = 0
 
     def update(self):
         self.rect.center = self.pos
+        now = pg.time.get_ticks()
 
-        self.strike = pg.sprite.groupcollide(self.sword_group, self.enemy_group, False, False)
+        self.strike = pg.sprite.groupcollide(self.game.sword_group, self.game.enemy_group, False, False)
         if self.strike:
-            if self.last_attack < self.swing_timer - 750:
-                self.passive = False
-
             if not self.passive:
-                self.boss.hp-=200
+                self.game.king.hp-=500
                 self.passive = True
-                self.last_attack = self.swing_timer
-                self.boss.hp = self.tekst_font.render("King HP: " + str(self.boss.hp), False, self.WHITE)
+                            
+                if self.game.king.hp <= 0:
+                    self.game.king.kill()
+
+
+        if now - self.spawn_tick > 100:
+            self.kill()
 
 
 

@@ -38,10 +38,10 @@ class Game():
         self.start_over = False
 
         self.last_collision = 0
-        self.last_attack = 0
 
         self.tekst_hp = self.tekst_font.render("HP: " + str(self.knight.hp), False, self.WHITE)
-
+        self.tekst_boss_hp = self.tekst_font.render("King HP: " + str(self.king.hp), False, self.WHITE)
+        
         self.run()
 
     def run(self):
