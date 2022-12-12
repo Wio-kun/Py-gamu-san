@@ -76,6 +76,8 @@ class Game():
                         self.start_over = True
                         playing = False
 
+            print(self.king.hp)
+
 
 
             self.all_sprites.draw(self.screen)

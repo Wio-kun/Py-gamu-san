@@ -77,20 +77,21 @@ class Sword(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.swing_timer = pg.time.get_ticks()
         self.rect.center = self.pos
-        self.swing = False
+        self.passive = False
 
     def update(self):
         self.rect.center = self.pos
 
         self.strike = pg.sprite.groupcollide(self.sword_group, self.enemy_group, False, False)
         if self.strike:
-            if self.last_attack < self.sword.swing_timer - 750:
-                self.sword.swing = False
+            if self.last_attack < self.swing_timer - 750:
+                self.passive = False
 
-            if not self.sword.swing:
-                self.king.hp-=200
-                self.sword.swing = True
-                self.last_attack = self.sword.swing_timer
+            if not self.passive:
+                self.boss.hp-=200
+                self.passive = True
+                self.last_attack = self.swing_timer
+                self.boss.hp = self.tekst_font.render("King HP: " + str(self.boss.hp), False, self.WHITE)
 
 
 
