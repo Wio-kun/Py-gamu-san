@@ -23,10 +23,12 @@ class Player(pg.sprite.Sprite):
         self.pos = vec(608, 619)
         self.rect.center = self.pos
         self.speed = 4
-        self.hp = 1000
+        self.hp = 1200
         self.immune = False
         self.attack_cooldown = False
         self.last_attack = 0
+
+        self.energy = 100
 
 
     def update(self):
@@ -40,15 +42,20 @@ class Player(pg.sprite.Sprite):
         if keys[pg.K_a]:
             self.pos.x -= self.speed
             self.image = player_img_180
-            if keys[pg.K_SPACE] and self.attack_cooldown == False:
-                self.attack_right()
+            if keys[pg.K_SPACE] and self.energy >= 100:
+                self.attack_left()
+                self.energy = 0
+                
                 
         if keys[pg.K_d]:
             self.pos.x += self.speed
             self.image = player_img
-            if keys[pg.K_SPACE] and self.attack_cooldown == False:
-                self.attack_left()
+            if keys[pg.K_SPACE] and self.energy >= 100:
+                self.energy = 0
+                self.attack_right()
 
+        if self.energy < 100:
+            self.energy += 1.5
 
         if self.pos.x <54:
             self.pos.x = 54
@@ -61,9 +68,9 @@ class Player(pg.sprite.Sprite):
 
 
     def attack_left(self):
-        Sword(self.game, self.pos.x + 150, self.pos.y)
-    def attack_right(self):
         Sword(self.game, self.pos.x - 150, self.pos.y)
+    def attack_right(self):
+        Sword(self.game, self.pos.x + 150, self.pos.y)
 
 
 class Sword(pg.sprite.Sprite):

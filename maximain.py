@@ -38,6 +38,7 @@ class Game():
         self.start_over = False
 
         self.last_collision = 0
+        self.spawn_8000 = False
 
         self.tekst_hp = self.tekst_font.render("HP: " + str(self.knight.hp), False, self.WHITE)
         self.tekst_boss_hp = self.tekst_font.render("King HP: " + str(self.king.hp), False, self.WHITE)
@@ -58,8 +59,12 @@ class Game():
             self.screen.blit(self.bg, (self.i,0))
             self.screen.blit(self.bg, (self.WIDTH+self.i,0))
             self.screen.blit(self.tekst_hp, (10, 10))
+            self.screen.blit(self.tekst_boss_hp, (730, 10))
+
 
             self.all_sprites.update()
+
+            self.tekst_boss_hp = self.tekst_font.render("King HP: " + str(self.king.hp), False, self.WHITE)
 
             self.hits = pg.sprite.spritecollide(self.knight, self.enemy_group, False)
             if self.hits:
@@ -75,10 +80,11 @@ class Game():
                         self.knight.kill()
                         self.start_over = True
                         playing = False
-
-            print(self.king.hp)
-
-
+            if self.king.hp == 8000:
+                self.spawn_8000 = True
+            if self.king.hp == 8000 and self.spawn_8000 == True:
+                self.spawn_8000 = False
+                self.black_knight = Guard(self)
 
             self.all_sprites.draw(self.screen)
             pg.display.update()
