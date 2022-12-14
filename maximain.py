@@ -29,6 +29,7 @@ class Game():
         self.enemy_group = pg.sprite.Group()
         self.knight_group = pg.sprite.Group()
         self.sword_group = pg.sprite.Group()
+        self.black_knight_group = pg.sprite.Group()
 
         self.knight = Player(self)
         self.king = Boss(self)
@@ -39,6 +40,10 @@ class Game():
 
         self.last_collision = 0
         self.spawn_8000 = False
+        self.spawn_5950 = False
+        self.spawn_3850 = False
+        self.spawn_1700 = False
+
 
         self.tekst_hp = self.tekst_font.render("HP: " + str(self.knight.hp), False, self.WHITE)
         self.tekst_boss_hp = self.tekst_font.render("King HP: " + str(self.king.hp), False, self.WHITE)
@@ -62,6 +67,7 @@ class Game():
             self.screen.blit(self.tekst_boss_hp, (730, 10))
 
 
+
             self.all_sprites.update()
 
             self.tekst_boss_hp = self.tekst_font.render("King HP: " + str(self.king.hp), False, self.WHITE)
@@ -80,11 +86,40 @@ class Game():
                         self.knight.kill()
                         self.start_over = True
                         playing = False
+
             if self.king.hp == 8000:
                 self.spawn_8000 = True
             if self.king.hp == 8000 and self.spawn_8000 == True:
+                self.black_knight = Guard(self, 1162, 175)
+                self.king.hp -= 50
                 self.spawn_8000 = False
-                self.black_knight = Guard(self)
+
+            if self.king.hp == 5950:
+                self.spawn_5950 = True
+            if self.king.hp == 5950 and self.spawn_5950 == True:
+                self.black_knight = Guard(self, 1162, 175)
+                self.black_knight = Guard(self, 54, 1158)
+                self.king.hp -= 100
+                self.spawn_5950 = False
+
+            if self.king.hp == 3850:
+                self.spawn_3850 = True
+            if self.king.hp == 3850 and self.spawn_3850 == True:
+                self.black_knight = Guard(self, 1162, 175)
+                self.black_knight = Guard(self, 54, 1158)
+                self.black_knight = Guard(self, 54, 175)
+                self.king.hp -= 150
+                self.spawn_3850 = False
+
+            if self.king.hp == 1700:
+                self.spawn_1700 = True
+            if self.king.hp == 1700 and self.spawn_1700 == True:
+                self.black_knight = Guard(self, 1162, 175)
+                self.black_knight = Guard(self, 54, 1158)
+                self.black_knight = Guard(self, 54, 175)
+                self.black_knight = Guard(self, 1162, 1158)
+                self.king.hp -= 200
+                self.spawn_1700 = False
 
             self.all_sprites.draw(self.screen)
             pg.display.update()

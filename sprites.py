@@ -10,7 +10,7 @@ guard_image = pg.image.load("black_knight_fight.png")
 guard_image = pg.transform.scale(guard_image, (111, 135))
 player_img_180 = pg.transform.flip(player_img, True, False)
 boss_image_180 = pg.transform.flip(boss_image, True, False)
-guard_image_180 = pg.transform.flip(boss_image, True, False)
+guard_image_180 = pg.transform.flip(guard_image, True, False)
 
 class Player(pg.sprite.Sprite):
     def __init__(self, game):
@@ -86,26 +86,34 @@ class Sword(pg.sprite.Sprite):
         self.swing_timer = pg.time.get_ticks()
         self.spawn_tick = pg.time.get_ticks()
         self.rect.center = self.pos
-        self.passive = False
+        self.passive_king = False
+        self.passive_black_knight = False
         self.last_attack = 0
 
     def update(self):
         self.rect.center = self.pos
         now = pg.time.get_ticks()
 
-        self.strike = pg.sprite.groupcollide(self.game.sword_group, self.game.enemy_group, False, False)
-        if self.strike:
-            if not self.passive:
+        self.strike_king = pg.sprite.spritecollide(self.game.king, self.game.sword_group, False, False)
+        if self.strike_king:
+            if not self.passive_king:
                 self.game.king.hp-=500
-                self.passive = True
+                self.passive_king = True
                             
                 if self.game.king.hp <= 0:
                     self.game.king.kill()
-
-
+        
+        self.strike_guard = pg.sprite.groupcollide(self.game.black_knight_group, self.game.sword_group, False, False)
+        if self.strike_guard:
+            if not self.passive_black_knight:
+                self.game.black_knight.hp-=500
+                self.passive_black_knight = True
+                            
+                if self.game.black_knight.hp <= 0:
+                    self.game.black_knight.kill()
+        
         if now - self.spawn_tick > 100:
             self.kill()
-
 
 
 class Boss(pg.sprite.Sprite):
@@ -132,21 +140,22 @@ class Boss(pg.sprite.Sprite):
 
         if self.pos.x < self.game.knight.pos.x + 10:
             self.direction_x = 2
-        if self.pos.x > self.game.knight.pos.x -10:
+        if self.pos.x > self.game.knight.pos.x - 10:
             self.direction_x = -2
         if self.pos.y < self.game.knight.pos.y:
             self.direction_y = 2
         if self.pos.y > self.game.knight.pos.y:
             self.direction_y = -2
 
+
 class Guard(pg.sprite.Sprite):
-    def __init__(self, game):
-        self.groups = game.all_sprites, game.enemy_group
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites, game.enemy_group, game.black_knight_group
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.image = guard_image
         self.rect = self.image.get_rect()
-        self.pos = vec(608, 155)
+        self.pos = vec(x, y)
         self.rect.center = self.pos
         self.speed = 2
         self.direction_x = 0
@@ -160,10 +169,10 @@ class Guard(pg.sprite.Sprite):
         self.pos.y += self.direction_y
 
 
-        if self.pos.x < self.game.knight.pos.x:
+        if self.pos.x < self.game.knight.pos.x + 10:
             self.direction_x = 2
             self.image = guard_image_180
-        if self.pos.x > self.game.knight.pos.x:
+        if self.pos.x > self.game.knight.pos.x - 10:
             self.direction_x = -2
             self.image = guard_image
         if self.pos.y < self.game.knight.pos.y:
