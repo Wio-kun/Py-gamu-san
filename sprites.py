@@ -103,14 +103,15 @@ class Sword(pg.sprite.Sprite):
                 if self.game.king.hp <= 0:
                     self.game.king.kill()
         
-        self.strike_guard = pg.sprite.groupcollide(self.game.black_knight_group, self.game.sword_group, False, False)
+        self.strike_guard = pg.sprite.groupcollide(self.game.guard_group, self.game.sword_group, False, False)
         if self.strike_guard:
             if not self.passive_black_knight:
-                self.game.black_knight.hp-=500
-                self.passive_black_knight = True
-                            
-                if self.game.black_knight.hp <= 0:
-                    self.game.black_knight.kill()
+                for enemy in self.strike_guard:
+                    enemy.hp-=500
+                    enemy = True
+                                
+                    if enemy.hp <= 0:
+                        enemy.kill()
         
         if now - self.spawn_tick > 100:
             self.kill()
@@ -150,7 +151,7 @@ class Boss(pg.sprite.Sprite):
 
 class Guard(pg.sprite.Sprite):
     def __init__(self, game, x, y):
-        self.groups = game.all_sprites, game.enemy_group, game.black_knight_group
+        self.groups = game.all_sprites, game.enemy_group, game.guard_group
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.image = guard_image
