@@ -83,7 +83,6 @@ class Sword(pg.sprite.Sprite):
         #self.image.set_colorkey((255,255,255))
         self.pos = vec(x, y)
         self.rect = self.image.get_rect()
-        self.swing_timer = pg.time.get_ticks()
         self.spawn_tick = pg.time.get_ticks()
         self.rect.center = self.pos
         self.passive_king = False
